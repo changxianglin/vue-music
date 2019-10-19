@@ -1,5 +1,5 @@
 # vue-music
-
+一个音乐类 webApp 使用 vue 全家桶技术实现功能
 ## Project setup
 ```
 npm install

@@ -5,6 +5,8 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+import 'common/stylus/index.styl' 
+
 new Vue({
   router,
   store,

@@ -425,6 +425,7 @@
         if (newSong.id === oldSong.id) {
           return
         }
+        // 消除切换歌曲歌词
         if (this.currentLyric) {
           this.currentLyric.stop()
           this.currentTime = 0

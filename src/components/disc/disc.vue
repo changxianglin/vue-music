@@ -7,6 +7,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import MusicList from 'components/music-list/music-list'
+import { getSongList } from 'api/recommend'
+import { ERR_OK } from 'api/config'
+
   export default {
     components: {
       MusicList
@@ -21,6 +24,18 @@ import MusicList from 'components/music-list/music-list'
       ...mapGetters([
         'disc'
       ])
+    },
+    created() {
+      this._getSongList()
+    },
+    methods: {
+      _getSongList() {
+        getSongList(this.disc.dissid).then((res) => {
+          if(res.code === ERR_OK) {
+            console.log(res.cdlist[0].songlist)
+          }
+        })
+      }
     }
   }
 </script>

@@ -2,14 +2,14 @@
   <div class="rank">
     <div class="toplist">
       <ul>
-        <li class="item">
+        <li class="item" v-for="item in topList" :key="item.id">
           <div class="icon">
-            <img width="100" height="100">
+            <img width="100" height="100" v-lazy="item.picUrl">
           </div>
           <ul class="songlist">
-            <li class="song">
-              <span></span>
-              <span></span>
+            <li class="song" v-for="(song, index) in item.songList" :key="index">
+              <span>{{index + 1}}</span>
+              <span>{{song.songname}}-{{song.singername}}</span>
             </li>
           </ul>
         </li>
@@ -21,13 +21,24 @@
 
 <script type="text/ecmascript-6">
 import { getTopList } from 'api/rank'
+import { ERR_OK } from 'api/config'
+
 export default {
   created() {
     this._getTopList()
   },
+  data() {
+    return {
+      topList: []
+    }
+  },
   methods: {
     _getTopList() {
-getTopList()
+      getTopList().then((res) => {
+        if(res.code === ERR_OK) {
+         this.topList = res.data.topList
+        } 
+      })
     }
   }
 }

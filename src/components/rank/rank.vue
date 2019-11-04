@@ -1,6 +1,6 @@
 <template>
-  <div class="rank">
-    <div class="toplist">
+  <div class="rank" ref = "rank">
+    <Scroll :data="topList" class="toplist" ref="toplist">
       <ul>
         <li class="item" v-for="item in topList" :key="item.id">
           <div class="icon">
@@ -14,7 +14,10 @@
           </ul>
         </li>
       </ul>
-    </div>
+      <div class="loading-container" v-show="!topList.length">
+        <Loading />
+      </div>
+    </Scroll>
     <router-view></router-view>
   </div>
 </template>
@@ -22,8 +25,16 @@
 <script type="text/ecmascript-6">
 import { getTopList } from 'api/rank'
 import { ERR_OK } from 'api/config'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
+import { playlistMixin } from 'common/js/mixin'
 
 export default {
+  mixins: [playlistMixin],
+  components: {
+    Scroll,
+    Loading
+  },
   created() {
     this._getTopList()
   },
@@ -33,6 +44,11 @@ export default {
     }
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length ? '60px' : ''
+      this.$refs.rank.style.bottom = bottom
+      this.$refs.toplist.refresh()
+    },
     _getTopList() {
       getTopList().then((res) => {
         if(res.code === ERR_OK) {

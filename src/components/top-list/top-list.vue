@@ -1,11 +1,14 @@
 <template>
   <transition name="slide">
-    <music-list :title="title" :bg-image="bgImage"></music-list>
+    <music-list :title="title" :bg-image="bgImage" :songs="songs"></music-list>
   </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { getMusicList } from 'api/rank'
+import { ERR_OK } from 'api/config'
+import { createSong } from 'common/js/song'
 import MusicList from 'components/music-list/music-list'
   export default {
     components: {
@@ -17,7 +20,41 @@ import MusicList from 'components/music-list/music-list'
         return this.topList.topTitle
       },
       bgImage() {
-        return this.topList.picUrl
+        if(this.songs.length) {
+          return this.songs[0].image
+        }  
+        return ''
+      }
+    },
+    data() {
+      return {
+        songs: []
+      }
+    },
+    created() {
+      this._getTopList()
+    },
+    methods: {
+      _getTopList() {
+        if(!this.topList.id) {
+          this.$router.push('/rank')
+          return 
+        }
+        getMusicList(this.topList.id).then((res) => {
+          if(res.code === ERR_OK) {
+            this.songs = this._normalizeSongs(res.songlist)
+          }
+        })
+      },
+      _normalizeSongs(list) {
+        let ret = []
+        list.forEach((item) => {
+          let musicData = item.data
+          if(musicData.songid && musicData.albumid) {
+            ret.push(createSong(musicData))
+          }
+        })
+        return ret
       }
     }
   }

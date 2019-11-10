@@ -1,12 +1,12 @@
 <template>
   <div class="suggest">
     <ul class="suggest-list">
-      <li class="suggest-item">
+      <li class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
-          <i></i>
+          <i :class="getIconCls(item)"></i>
         </div>
         <div class="name">
-          <p class="text"></p>
+          <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
     </ul>
@@ -14,16 +14,69 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { search } from 'api/search'
+import { ERR_OK } from 'api/config'
+import { filterSinger } from 'common/js/song'
+
+const TYPE_SINGER = 'singer'
+
   export default {
     props: {
       query: {
         type: String,
         default: '',
+      },
+      showSinger: {
+        type: Boolean,
+        default: true,
       }
     },
     watch: {
-      query() {
-        this.search()
+      query(newQuery) {
+        this.search(newQuery)
+      }
+    },
+    data() {
+      return {
+        page: 1,
+        result: [],
+      }
+    },
+    methods: {
+      search() {
+        console.log('应该去请求数据了', this.query, this.page, this.showSinger)
+        search(this.query, this.page, this.showSinger).then((res) => {
+          console.log('返回了吗', res)
+          if(res.code === ERR_OK) {
+            console.log(res.data, '这里收到', res)
+            this.result = this._genResult(res.data)
+          }
+        })
+      },
+      _genResult(data) {
+        let ret = []
+        if(data.zhida && data.zhida.singerid) {
+          ret.push({...data.zhida, ...{type: TYPE_SINGER}})
+        }
+        if(data.song) {
+          ret = ret.concat(data.song.list)   
+        }
+
+        return ret
+      },
+      getIconCls(item) {
+        if(item.type === TYPE_SINGER) {
+          return 'icon-mine'
+        } else {
+          return 'icon-music'
+        }
+      },
+      getDisplayName(item) {
+        if(item.type === TYPE_SINGER) {
+          return item.singername
+        } else {
+          return `${item.songname}-${filterSinger(item.singer)}`
+        }
       }
     }
   }

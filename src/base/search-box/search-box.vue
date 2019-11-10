@@ -1,7 +1,7 @@
 <template>
   <div class="search-box">
     <i class="icon-search"></i>
-    <input class="box" v-model="query" :placeholder="placeholder" />
+    <input ref="query" class="box" v-model="query" :placeholder="placeholder" />
     <i v-show="query" class="icon-dismiss" @click="clear"></i> 
   </div>
 </template>
@@ -23,12 +23,16 @@
       clear() {
         this.query = ''
       },
+      blur() {
+        this.$refs.query.blur()
+      },
       setQuery(query) {
         this.query = query
       }
     },
     created() {
       this.$watch('query', (newQuery) => {
+        console.log('这里出现输入的值', newQuery)
         this.$emit('query', newQuery)
       })
     }

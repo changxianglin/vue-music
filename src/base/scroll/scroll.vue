@@ -21,6 +21,10 @@
         type: Boolean,
         default: false
       },
+      pollup: {
+        type: Boolean,
+        default: false
+      },
       data: {
         type: Array,
         default: null
@@ -45,6 +49,14 @@
           let me = this
           this.scroll.on('scroll', (pos) => {
             me.$emit('scroll', pos)
+          })
+        }
+
+        if(this.pollup) {
+          this.scroll.on('scollEnd', () => {
+            if(this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToEnd')
+            }
           })
         }
       },

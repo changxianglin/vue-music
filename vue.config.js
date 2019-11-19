@@ -87,6 +87,7 @@ module.exports = {
       })
 
       app.get('/api/search', function (req, res) {
+        console.log('代理从这里走了')
         const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
         axios.get(url, {
           headers: {

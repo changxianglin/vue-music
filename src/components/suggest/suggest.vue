@@ -42,7 +42,7 @@ const perpage = 20
     },
     watch: {
       query(newQuery) {
-        this.search(newQuery)
+        this._search(newQuery)
       }
     },
     data() {
@@ -54,7 +54,7 @@ const perpage = 20
       }
     },
     methods: {
-      search() {
+      _search() {
         this.hasMore = true
         console.log('应该去请求数据了', this.query, this.page, this.showSinger)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {

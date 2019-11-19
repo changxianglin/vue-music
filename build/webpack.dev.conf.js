@@ -98,6 +98,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       })
 
       app.get('/api/search', function (req, res) {
+        console.log('代理起作用')
         const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
         axios.get(url, {
           headers: {

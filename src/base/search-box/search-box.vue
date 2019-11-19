@@ -32,7 +32,6 @@
     },
     created() {
       this.$watch('query', (newQuery) => {
-        console.log('这里出现输入的值', newQuery)
         this.$emit('query', newQuery)
       })
     }

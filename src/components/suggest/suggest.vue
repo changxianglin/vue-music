@@ -56,11 +56,8 @@ const perpage = 20
     methods: {
       _search() {
         this.hasMore = true
-        console.log('应该去请求数据了', this.query, this.page, this.showSinger)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
-          console.log('返回了吗', res)
           if(res.code === ERR_OK) {
-            console.log(res.data, '这里收到', res)
             this.result = this._genResult(res.data)
             this._checkMore(res.data)
           }
@@ -105,7 +102,7 @@ const perpage = 20
         if(item.type === TYPE_SINGER) {
           return item.singername
         } else {
-          return `${item.songname}-${item.singer}`
+          return `${item.name}-${item.singer}`
         }
       },
       searchMore() {

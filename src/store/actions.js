@@ -42,4 +42,13 @@ export const insertSong = function({ commit, state }, song) {
   let fpIndex = findIndex(playlist, song)
   currentIndex++
   playlist.splice(currentIndex, 0, song)
+
+  if(fpIndex > -1) {
+    if(currentIndex > fpIndex) {
+      playlist.splice(fpIndex, 1)
+      currentIndex--
+    } else {
+      playlist.splice(fpIndex + 1, 1)
+    }
+  }
 }

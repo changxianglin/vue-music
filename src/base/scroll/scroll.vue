@@ -21,7 +21,7 @@
         type: Boolean,
         default: false
       },
-      pollup: {
+      pullup: {
         type: Boolean,
         default: false
       },
@@ -52,8 +52,8 @@
           })
         }
 
-        if(this.pollup) {
-          this.scroll.on('scollEnd', () => {
+        if(this.pullup) {
+          this.scroll.on('scrollEnd', () => {
             if(this.scroll.y <= (this.scroll.maxScrollY + 50)) {
               this.$emit('scrollToEnd')
             }

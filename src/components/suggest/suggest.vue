@@ -1,9 +1,10 @@
 <template>
   <scroll class="suggest" 
+          ref="suggest"
           :data="result" 
           :pullup="pullup"
-          @scrollToEnd="searchMore"
-  >
+          :beforeScroll = "beforeScroll"
+          @scrollToEnd="searchMore">
     <ul class="suggest-list">
       <li class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
@@ -13,6 +14,7 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading  v-show="hasMore" :title="null"></loading>
     </ul>
   </scroll>
 </template>
@@ -22,13 +24,15 @@ import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
 import { createSong } from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 
 const TYPE_SINGER = 'singer'
-const perpage = 20
+const perpage = 30
 
   export default {
     components: {
       Scroll,
+      Loading
     },
     props: {
       query: {
@@ -50,12 +54,18 @@ const perpage = 20
         page: 1,
         result: [],
         pullup: true,
+        beforeScroll: true,
         hasMore: true,
       }
     },
     methods: {
+      refresh() {
+        this.$refs.suggest.refresh()
+      },
       _search() {
+        this.page = 1
         this.hasMore = true
+        this.$refs.suggest.scrollTo(0, 0)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if(res.code === ERR_OK) {
             this.result = this._genResult(res.data)
@@ -65,7 +75,7 @@ const perpage = 20
       },
       _checkMore(data) {
         const song = data.song
-        if(!song.list.length || (song.curnum + song.curpage * perpage) > song.totalnum) {
+        if(!song.list.length || (song.curnum + song.curpage * perpage) >= song.totalnum) {
           this.hasMore = false
         }
       },  
@@ -108,7 +118,14 @@ const perpage = 20
       searchMore() {
         if(!this.hasMore) {
           return 
-        }
+        } 
+        this.page++
+        search(this.query, this.page, this.showSinger, perpage).then((res) => {
+          if(res.code === ERR_OK) {
+            this.result = this.result.concat(this._genResult(res.data))
+            this._checkMore(res.data)
+          }
+        })
       }
     }
   }

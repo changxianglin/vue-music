@@ -51,7 +51,6 @@
         })
       },
       onQueryChange(query) {
-        console.log('子传父', query)
         this.query = query
       },
       addQuery(query) {

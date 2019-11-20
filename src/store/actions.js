@@ -33,26 +33,25 @@ export const randomPlay = ({commit}, {list}) => {
 }
 
 export const insertSong = function({ commit, state }, song) {
-  let playlist = state.playlist
-  let sequenceList = state.sequenceList
+  let playList = state.playList.slice()
+  let sequenceList = state.sequenceList.slice()
   let currentIndex = state.currentIndex
 
-  let currentSong = playlist[currentIndex]
+  let currentSong = playList[currentIndex]
 
-  let fpIndex = findIndex(playlist, song)
+  let fpIndex = findIndex(playList, song)
   currentIndex++
-  playlist.splice(currentIndex, 0, song)
-
+  playList.splice(currentIndex, 0, song)
   if(fpIndex > -1) {
     if(currentIndex > fpIndex) {
-      playlist.splice(fpIndex, 1)
+      playList.splice(fpIndex, 1)
       currentIndex--
     } else {
-      playlist.splice(fpIndex + 1, 1)
+      playList.splice(fpIndex + 1, 1)
     }
   }
 
-  let currentSIndex = findIndex(sequenceList, currentIndex) + 1
+  let currentSIndex = findIndex(sequenceList, currentSong) + 1
 
   let fsIndex = findIndex(sequenceList, song)
 
@@ -66,4 +65,10 @@ export const insertSong = function({ commit, state }, song) {
       sequenceList.splice(fsIndex + 1, 1)
     }
   }
+
+  commit(types.SET_PLAYLIST, playList)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+  commit(types.SET_FULL_SCREEN, true)
+  commit(types.SET_PLAYING_STATE, true)
 }

@@ -4,6 +4,7 @@
           :data="result" 
           :pullup="pullup"
           :beforeScroll = "beforeScroll"
+          @beforeScroll = 'listScroll'
           @scrollToEnd="searchMore">
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
@@ -99,6 +100,9 @@ const perpage = 30
         } else {
           this.insertSong(item)
         }
+      },
+      listScroll() {
+        this.$emit('listScroll')
       },
       _checkMore(data) {
         const song = data.song

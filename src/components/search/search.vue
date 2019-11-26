@@ -27,6 +27,7 @@
   import { getHotKey } from 'api/search'
   import { ERR_OK } from 'api/config'
   import Suggest from 'components/suggest/suggest'
+  import { mapActions } from 'vuex'
 
   export default {
     components: {
@@ -43,8 +44,11 @@
       this._getHotKey()
     },
     methods: {
+      ...mapActions([
+        'saveSearchHistory'
+      ]),
       saveSearch() {
-
+        this.saveSearchHistory(this.query)
       },
       _getHotKey() {
         getHotKey().then(res => {

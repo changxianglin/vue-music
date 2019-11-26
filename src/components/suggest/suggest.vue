@@ -100,6 +100,8 @@ const perpage = 30
         } else {
           this.insertSong(item)
         }
+
+        this.$emit('select')
       },
       listScroll() {
         this.$emit('listScroll')

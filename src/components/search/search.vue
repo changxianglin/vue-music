@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="search-result" v-show="query">
-      <suggest @listScroll="blurInput"  :query="query"></suggest>
+      <suggest @select = "saveSearch" @listScroll="blurInput"  :query="query"></suggest>
     </div>
     <router-view></router-view>
   </div>
@@ -43,6 +43,9 @@
       this._getHotKey()
     },
     methods: {
+      saveSearch() {
+
+      },
       _getHotKey() {
         getHotKey().then(res => {
           if(res.code === ERR_OK) {

@@ -3,7 +3,7 @@
     <div class="search-wrapper">
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
-    <div class="shortcut-wrapper" ref="showcut-wrapper" v-show="!query">
+    <div class="shortcut-wrapper" ref="showcutWrapper" v-show="!query">
       <scroll class="shortcut" ref="shortcut" :data = "shortcuts">
         <div>
         <div class="hot-key">
@@ -14,20 +14,20 @@
             </li>
           </ul>
         </div>
-        <div class="search-history" ref="search-result" v-show="searchHistory.length">
-        <h1 class="title">
-          <span class="text">搜索历史</span>
-          <span class="clear" @click="showConfirm">
-            <i class="icon-clear"></i>
-          </span>
-        </h1>
-        <search-list @select="addQuery" @delete="deleteSearchHistory" :searches="searchHistory"></search-list>
-      </div>
+        <div class="search-history" v-show="searchHistory.length">
+          <h1 class="title">
+            <span class="text">搜索历史</span>
+            <span class="clear" @click="showConfirm">
+              <i class="icon-clear"></i>
+            </span>
+          </h1>
+          <search-list @select="addQuery" @delete="deleteSearchHistory" :searches="searchHistory"></search-list>
+        </div>
       </div>
       </scroll>
     </div>
-    <div class="search-result" v-show="query">
-      <suggest @select = "saveSearch" @listScroll="blurInput"  :query="query"></suggest>
+    <div ref="searchResult" class="search-result" v-show="query">
+      <suggest ref="suggest" @select = "saveSearch" @listScroll="blurInput"  :query="query"></suggest>
     </div>
     <confirm ref="confirm" text="是否清空所有搜索历史" confirmBtnText="清空" @confirm="clearSearchHistory"></confirm>
     <router-view></router-view>
@@ -61,7 +61,7 @@
       }
     },
     computed: {
-      shortcut() {
+      shortcuts() {
         return this.hotKey.concat(this.searchHistory)
       },
       ...mapGetters([
@@ -89,7 +89,7 @@
       handlePlaylist(playlist) {
         const bottom = playlist.length > 0 ? '60px' : ''
 
-        this.$refs.shortcutWrapper.style.bottom = bottom
+        this.$refs.showcutWrapper.style.bottom = bottom
         this.$refs.shortcut.refresh()
 
         this.$refs.searchResult.style.bottom = bottom

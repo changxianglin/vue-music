@@ -4,7 +4,8 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div class="shortcut-wrapper" v-show="!query">
-      <div class="shortcut">
+      <scroll class="shortcut" ref="shortcut" :data = "shortcuts">
+        <div>
         <div class="hot-key">
           <h1 class="title">热门搜索</h1>
           <ul>
@@ -13,8 +14,7 @@
             </li>
           </ul>
         </div>
-      </div>
-      <div class="search-history" v-show="searchHistory.length">
+        <div class="search-history" v-show="searchHistory.length">
         <h1 class="title">
           <span class="text">搜索历史</span>
           <span class="clear" @click="showConfirm">
@@ -23,6 +23,8 @@
         </h1>
         <search-list @select="addQuery" @delete="deleteSearchHistory" :searches="searchHistory"></search-list>
       </div>
+      </div>
+      </scroll>
     </div>
     <div class="search-result" v-show="query">
       <suggest @select = "saveSearch" @listScroll="blurInput"  :query="query"></suggest>
@@ -39,6 +41,7 @@
   import Suggest from 'components/suggest/suggest'
   import SearchList from 'base/search-list/search-list'
   import Confirm from 'base/confirm/confirm'
+  import Scroll from 'base/scroll/scroll'
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
@@ -46,7 +49,8 @@
       SearchBox,
       Suggest,
       SearchList,
-      Confirm
+      Confirm,
+      Scroll,
     },
     data() {
       return {
@@ -55,9 +59,21 @@
       }
     },
     computed: {
+      shortcut() {
+        return this.hotKey.concat(this.searchHistory)
+      },
       ...mapGetters([
         'searchHistory'
       ])
+    },
+    watch: {
+      query(newQuery) {
+        if(!newQuery) {
+          setTimeout(() => {
+            this.$refs.shortcut.refresh()
+          }, 20)
+        }
+      }
     },
     created() {
       this._getHotKey()

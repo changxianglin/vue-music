@@ -73,9 +73,6 @@ const perpage = 30
       ...mapActions([
         'insertSong'
       ]),
-      refresh() {
-        this.$refs.suggest.refresh()
-      },
       _search() {
         this.page = 1
         this.hasMore = true
@@ -102,6 +99,9 @@ const perpage = 30
         }
 
         this.$emit('select')
+      },
+      refresh() {
+        this.$refs.suggest.refresh()
       },
       listScroll() {
         this.$emit('listScroll')

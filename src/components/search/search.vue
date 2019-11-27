@@ -3,7 +3,7 @@
     <div class="search-wrapper">
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
-    <div class="shortcut-wrapper" v-show="!query">
+    <div class="shortcut-wrapper" ref="showcut-wrapper" v-show="!query">
       <scroll class="shortcut" ref="shortcut" :data = "shortcuts">
         <div>
         <div class="hot-key">
@@ -14,7 +14,7 @@
             </li>
           </ul>
         </div>
-        <div class="search-history" v-show="searchHistory.length">
+        <div class="search-history" ref="search-result" v-show="searchHistory.length">
         <h1 class="title">
           <span class="text">搜索历史</span>
           <span class="clear" @click="showConfirm">
@@ -43,8 +43,10 @@
   import Confirm from 'base/confirm/confirm'
   import Scroll from 'base/scroll/scroll'
   import { mapActions, mapGetters } from 'vuex'
+  import { playlistMixin } from 'common/js/mixin' 
 
   export default {
+    mixins: [playlistMixin],
     components: {
       SearchBox,
       Suggest,
@@ -84,6 +86,15 @@
         'deleteSearchHistory',
         'clearSearchHistory'
       ]),
+      handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+
+        this.$refs.shortcutWrapper.style.bottom = bottom
+        this.$refs.shortcut.refresh()
+
+        this.$refs.searchResult.style.bottom = bottom
+        this.$refs.suggest.refresh()
+      },
       saveSearch() {
         this.saveSearchHistory(this.query)
       },

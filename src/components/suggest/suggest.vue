@@ -113,7 +113,7 @@ const perpage = 30
           this.hasMore = false
         }
       },  
-      async _genResult(data) {
+      _genResult(data) {
         let ret = []
         if(data.zhida && data.zhida.singerid) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})

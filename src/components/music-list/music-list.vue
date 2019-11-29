@@ -90,6 +90,7 @@
         this.$router.back()
       },
       selectItem(item, index) {
+        console.log('这里获得播放数据', item, index)
         this.selectPlay({
           list: this.songs,
           index: index

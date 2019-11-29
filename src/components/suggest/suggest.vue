@@ -7,7 +7,7 @@
           @beforeScroll = 'listScroll'
           @scrollToEnd="searchMore">
     <ul class="suggest-list">
-      <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
+      <li @click="selectItem(item, index)" class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -26,6 +26,7 @@
 <script type="text/ecmascript-6">
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
+// import { processSongsUrl, createSong } from 'common/js/song'
 import { createSong } from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
@@ -79,13 +80,12 @@ const perpage = 30
         this.$refs.suggest.scrollTo(0, 0)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if(res.code === ERR_OK) {
-            console.log('获取返回数据', res.data)
             this.result = this._genResult(res.data)
             this._checkMore(res.data)
           }
         })
       },
-      selectItem(item) {
+      selectItem(item, index) {
         if(item.type === TYPE_SINGER) {
           const singer = new Singer({
             id: item.singermid,
@@ -99,7 +99,7 @@ const perpage = 30
           this.insertSong(item)
         }
 
-        this.$emit('select')
+        this.$emit('select', item, index)
       },
       refresh() {
         this.$refs.suggest.refresh()
@@ -113,13 +113,19 @@ const perpage = 30
           this.hasMore = false
         }
       },  
-      _genResult(data) {
+      async _genResult(data) {
         let ret = []
         if(data.zhida && data.zhida.singerid) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
         if(data.song) {
-          ret = ret.concat(this._normalizeSongs(data.song.list))   
+          ret = ret.concat(this._normalizeSongs(data.song.list))
+          // processSongsUrl(this._normalizeSongs(data.song.list)).then(song => {
+          //   console.log(song)
+          //   console.log('结果', ret.concat(song))
+          //   ret = ret.concat(song)
+          //   console.log('城里吗', ret)
+          // })  
         }
 
         return ret

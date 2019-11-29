@@ -40,6 +40,7 @@
         getSingerDetail(this.singer.id).then((res) => {
           if (res.code === ERR_OK) {
             processSongsUrl(this._normalizeSongs(res.data.list)).then(song => {
+              console.log('这就是密码所在', song)
               this.songs = song
             })
           }
@@ -53,6 +54,7 @@
             ret.push(createSong(musicData))
           }
         })
+        console.log('次数无声胜过一切', ret)
         return ret
       }
     },

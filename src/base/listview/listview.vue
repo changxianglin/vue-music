@@ -20,7 +20,6 @@
       <ul>
         <li v-for="(item, index) in shortcutList" :key="index" :data-index="index" class="item"
             :class="{'current':currentIndex===index}">{{item}}
-
         </li>
       </ul>
     </div>
@@ -76,6 +75,7 @@
     },
     methods: {
       selectItem(item) {
+        console.log('这里传当前选中的', item)
         this.$emit('select', item)
       },
       onShortcutTouchStart(e) {

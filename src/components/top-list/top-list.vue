@@ -8,7 +8,7 @@
 import { mapGetters } from 'vuex'
 import { getMusicList } from 'api/rank'
 import { ERR_OK } from 'api/config'
-import { createSong } from 'common/js/song'
+import { processSongsUrl, createSong } from 'common/js/song'
 import MusicList from 'components/music-list/music-list'
   export default {
     components: {
@@ -43,7 +43,9 @@ import MusicList from 'components/music-list/music-list'
         }
         getMusicList(this.topList.id).then((res) => {
           if(res.code === ERR_OK) {
-            this.songs = this._normalizeSongs(res.songlist)
+            processSongsUrl(this._normalizeSongs(res.songlist)).then(song => {
+               this.songs = song
+            })
           }
         })
       },

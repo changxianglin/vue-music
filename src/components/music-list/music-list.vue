@@ -96,6 +96,7 @@
         })
       },
       random() {
+        console.log(this.songs, '随机播放')
         this.randomPlay({
           list: this.songs
         })

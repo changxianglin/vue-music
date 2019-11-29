@@ -79,6 +79,7 @@ const perpage = 30
         this.$refs.suggest.scrollTo(0, 0)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if(res.code === ERR_OK) {
+            console.log('获取返回数据', res.data)
             this.result = this._genResult(res.data)
             this._checkMore(res.data)
           }

@@ -26,8 +26,8 @@
 <script type="text/ecmascript-6">
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
-// import { processSongsUrl, createSong } from 'common/js/song'
-import { createSong } from 'common/js/song'
+import { processSongsUrl, createSong } from 'common/js/song'
+// import { createSong } from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
@@ -80,7 +80,10 @@ const perpage = 30
         this.$refs.suggest.scrollTo(0, 0)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if(res.code === ERR_OK) {
-            this.result = this._genResult(res.data)
+            this._genResult(res.data).then(result => {
+              this.result = this.result.concat(result)
+            })
+            // this.result = this._genResult(res.data)
             this._checkMore(res.data)
           }
         })
@@ -118,17 +121,16 @@ const perpage = 30
         if(data.zhida && data.zhida.singerid) {
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
-        if(data.song) {
-          ret = ret.concat(this._normalizeSongs(data.song.list))
-          // processSongsUrl(this._normalizeSongs(data.song.list)).then(song => {
-          //   console.log(song)
-          //   console.log('结果', ret.concat(song))
-          //   ret = ret.concat(song)
-          //   console.log('城里吗', ret)
-          // })  
-        }
+        // if(data.song) {
+        //   ret = ret.concat(this._normalizeSongs(data.song.list))
+          return processSongsUrl(this._normalizeSongs(data.song.list)).then(song => {
+            ret = ret.concat(song)
+            return ret
+          })  
+        // }
+        // console.log(ret)
+        // return ret
 
-        return ret
       },
       _normalizeSongs(list) {
         let ret = []
@@ -162,7 +164,10 @@ const perpage = 30
         this.page++
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if(res.code === ERR_OK) {
-            this.result = this.result.concat(this._genResult(res.data))
+            this._genResult(res.data).then(result => {
+              this.result = this.result.concat(result)
+            })
+            // this.result = this.result.concat(this._genResult(res.data))
             this._checkMore(res.data)
           }
         })

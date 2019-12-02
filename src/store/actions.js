@@ -104,5 +104,7 @@ export const deleteSong = function({commit, state}, song) {
 
   if(!playlist.length) {
     commit(types.SET_PLAYING_STATE, false)
+  } else {
+    commit(types.SET_PLAYING_STATE, true)
   }
 }

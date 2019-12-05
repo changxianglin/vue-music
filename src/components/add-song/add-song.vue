@@ -8,14 +8,19 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <search-box @query="onQueryChange" placeholder='搜索歌曲'></search-box>
+        <search-box ref="searchBox" @query="onQueryChange" placeholder='搜索歌曲'></search-box>
       </div>
       <div class="shortcut" v-show="!query">
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
         <div class="list-wrapper">
-          <scroll class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
+          <scroll ref="songList" class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
             <div class="list-inner">
               <song-list :songs="playHistory" @select="selectSong"></song-list>
+            </div>
+          </scroll>
+          <scroll ref="searchList" class="list-scroll" v-if="currentIndex === 1" :data="searchHistory">
+            <div class="list-inner">
+              <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
             </div>
           </scroll>
         </div>
@@ -34,6 +39,7 @@ import Switches from 'base/switches/switches'
 import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
 import Song from 'common/js/song'
+import SearchList from 'base/search-list/search-list'
 import { searchMixin } from 'common/js/mixin'
 import { mapGetters, mapActions } from 'vuex'
 
@@ -45,6 +51,7 @@ import { mapGetters, mapActions } from 'vuex'
       Switches,
       Scroll,
       SongList,
+      SearchList,
     },
     data() {
       return {
@@ -58,13 +65,20 @@ import { mapGetters, mapActions } from 'vuex'
       }
     },
     computed: {
-      ...playHistory([
+      ...mapGetters([
         'playHistory',
       ])
     },
     methods: {
       show() {
         this.showFlag = true
+        setTimeout(() => {
+          if(this.currentIndex === 0) {
+            this.$refs.songList.refresh()
+          } else {
+            this.$refs.searchList.refresh()
+          }
+        })
       },
       hide() {
         this.showFlag = false

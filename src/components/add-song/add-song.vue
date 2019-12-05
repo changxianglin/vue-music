@@ -13,12 +13,12 @@
       <div class="shortcut" v-show="!query">
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
         <div class="list-wrapper">
-          <scroll ref="songList" class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
+          <scroll ref="songList" :refreshDelay="refreshDelay" class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
             <div class="list-inner">
               <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
-          <scroll ref="searchList" class="list-scroll" v-if="currentIndex === 1" :data="searchHistory">
+          <scroll ref="searchList" :refreshDelay="refreshDelay" class="list-scroll" v-if="currentIndex === 1" :data="searchHistory">
             <div class="list-inner">
               <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
             </div>

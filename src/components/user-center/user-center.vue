@@ -4,7 +4,9 @@
       <div class="back">
         <i class="icon-back"></i>
         </div>
-      <div class="switches-wrapper"></div>
+      <div class="switches-wrapper">
+        <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
+      </div>
       <div ref="playBtn" class="play-btn">
         <i class="icon-play"></i>
         <span class="text">随机播放</span>
@@ -15,8 +17,25 @@
 </template>
 
 <script>
-  export default {
-    
+  import Switches from 'base/switches/switches'
+  export default {  
+    components: {
+      Switches
+    },
+    data() {
+      return {
+        currentIndex: 0,
+        switches: [
+          {name: '我喜欢的'},
+          {name: '最近听的'},
+        ]
+      }
+    },
+    methods: {
+      switchItem(index) {
+        this.currentIndex = index
+      }
+    }
   }
 </script>
 

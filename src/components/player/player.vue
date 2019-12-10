@@ -271,6 +271,7 @@
         this.songReady = false
       },
       ready() {
+        console.log('加载歌曲', this.currentSong)
         this.songReady = true
         this.savePlayHistory = (this.currentSong)
       },

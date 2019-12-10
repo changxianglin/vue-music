@@ -58,6 +58,7 @@ export function loadSearch () {
 }
 
 export function savePlay (song) {
+  console.log('操作缓存', song)
   let songs = storage.get(PLAY_KEY, [])
   insertArray(songs, song, (item) => {
     return song.id === item.id
@@ -71,6 +72,7 @@ export function loadPlay () {
 }
 
 export function saveFavorite (song) {
+  console.log('喜欢', song)
   let songs = storage.get(FAVORITE_KEY, [])
   insertArray(songs, song, (item) => {
     return song.id === item.id
